@@ -1,0 +1,11 @@
+@import "tailwindcss";
+
+/* Tailwind v4 默认按 prefers-color-scheme 触发 dark:；这里改为 .dark 类策略，
+   匹配 layout.tsx 在 <html> 上写死的 className="dark" */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* 显式声明扫描范围（v4 通常自动检测，加上更稳） */
+@source "../components";
+@source "../hooks";
+@source "../lib";
+@source "./";
