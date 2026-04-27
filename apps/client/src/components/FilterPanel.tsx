@@ -1,9 +1,10 @@
 'use client';
 
 import type { FilterState } from '@/hooks/useFilters';
+import { ViewModeToggle, type ViewMode } from './ViewModeToggle';
 
 /**
- * 过滤面板（step 5b-2）
+ * 过滤面板（step 5b-2 + 5b-3 view mode toggle）
  * 不引外部 select / dropdown 库；多选用原生 <details>/<summary> 折叠
  */
 export function FilterPanel({
@@ -16,6 +17,8 @@ export function FilterPanel({
   paused,
   onTogglePause,
   bufferedCount,
+  viewMode,
+  onViewModeChange,
 }: {
   sourceApps: string[];
   agentNames: string[];
@@ -26,6 +29,8 @@ export function FilterPanel({
   paused: boolean;
   onTogglePause: () => void;
   bufferedCount: number;
+  viewMode: ViewMode;
+  onViewModeChange: (mode: ViewMode) => void;
 }) {
   return (
     <div className="sticky top-0 z-20 flex flex-wrap items-center gap-3 border-b border-slate-800 bg-slate-900/50 px-6 py-2 backdrop-blur">
@@ -54,6 +59,8 @@ export function FilterPanel({
         placeholder="搜索 payload / tool / prompt..."
         className="min-w-[260px] flex-1 rounded border border-slate-800 bg-slate-950 px-3 py-1 text-xs text-slate-200 placeholder:text-slate-600 focus:border-emerald-700 focus:outline-none"
       />
+
+      <ViewModeToggle value={viewMode} onChange={onViewModeChange} />
 
       <button
         type="button"

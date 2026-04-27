@@ -1,26 +1,31 @@
 'use client';
 
-// Dashboard 主页（step 5b-2：事件流 + 详情弹窗 + 过滤面板 + 暂停）
-// - 事件流：垂直滚动，最新在顶部，行点击打开详情
-// - 顶栏：标题 + N/M events + WebSocket 连接状态
-// - FilterPanel：source / agent / type / 搜索 / 清空 / 暂停
-// - 不做 swimlane / 自动滚动控制
+// Dashboard 主页（step 5b-3：合并/展开视图切换）
+// - 合并模式：PreToolUse+PostToolUse、SubagentStart+SubagentStop 折成一行
+// - 展开模式：保持 5b-1 行为，每个事件独立一行
 
 import { useMemo, useState } from 'react';
-import type { AgentEvent } from '@agent-obs/shared';
+import type { AgentEvent, PairedEvent } from '@agent-obs/shared';
 import { ConnectionStatus } from '@/components/ConnectionStatus';
 import { EventDetailModal } from '@/components/EventDetailModal';
 import { EventRow } from '@/components/EventRow';
 import { FilterPanel } from '@/components/FilterPanel';
+import { PairedEventRow } from '@/components/PairedEventRow';
+import type { ViewMode } from '@/components/ViewModeToggle';
 import { useFilters } from '@/hooks/useFilters';
+import { usePairedEvents } from '@/hooks/usePairedEvents';
 import { usePauseable } from '@/hooks/usePauseable';
+
+type ModalEvent = AgentEvent | PairedEvent;
+type RenderItem = AgentEvent | PairedEvent;
 
 export default function DashboardPage() {
   const { events, status, paused, togglePause, bufferedCount } = usePauseable();
   const { filters, setFilters, clearFilters, applyFilters } = useFilters();
-  const [selectedEvent, setSelectedEvent] = useState<AgentEvent | null>(null);
+  const [selectedEvent, setSelectedEvent] = useState<ModalEvent | null>(null);
+  const [viewMode, setViewMode] = useState<ViewMode>('merged');
 
-  // 候选项动态从当前 events 派生（DESC 顺序，转 Set 去重，再按字典序排）
+  // 候选项动态从当前 events 派生
   const sourceApps = useMemo(
     () => Array.from(new Set(events.map((e) => e.source_app))).sort(),
     [events],
@@ -39,6 +44,12 @@ export default function DashboardPage() {
     [applyFilters, events],
   );
 
+  // 始终算 paired list（useMemo 依赖 filteredEvents，view 切换时不重算）
+  const pairedList = usePairedEvents(filteredEvents);
+
+  const renderList: RenderItem[] =
+    viewMode === 'merged' ? pairedList : filteredEvents;
+
   return (
     <div className="flex h-screen flex-col">
       <header className="flex shrink-0 items-center justify-between border-b border-slate-800 bg-slate-950/80 px-6 py-3 backdrop-blur">
@@ -51,6 +62,9 @@ export default function DashboardPage() {
           </h1>
           <span className="ml-2 text-xs text-slate-500 tabular-nums">
             {filteredEvents.length} / {events.length} events
+            {viewMode === 'merged'
+              ? ` · ${renderList.length} rows`
+              : null}
           </span>
         </div>
         <ConnectionStatus status={status} />
@@ -66,6 +80,8 @@ export default function DashboardPage() {
         paused={paused}
         onTogglePause={togglePause}
         bufferedCount={bufferedCount}
+        viewMode={viewMode}
+        onViewModeChange={setViewMode}
       />
 
       <main className="min-h-0 flex-1 overflow-y-auto">
@@ -75,9 +91,21 @@ export default function DashboardPage() {
           <NoMatchState onClear={clearFilters} />
         ) : (
           <ul className="divide-y divide-slate-800/60">
-            {filteredEvents.map((ev) => (
-              <EventRow key={ev.id} event={ev} onClick={setSelectedEvent} />
-            ))}
+            {renderList.map((item) =>
+              isPaired(item) ? (
+                <PairedEventRow
+                  key={`p-${item.pre_event.id}`}
+                  pairedEvent={item}
+                  onClick={setSelectedEvent}
+                />
+              ) : (
+                <EventRow
+                  key={item.id}
+                  event={item}
+                  onClick={setSelectedEvent}
+                />
+              ),
+            )}
           </ul>
         )}
       </main>
@@ -88,6 +116,10 @@ export default function DashboardPage() {
       />
     </div>
   );
+}
+
+function isPaired(item: RenderItem): item is PairedEvent {
+  return (item as PairedEvent).kind === 'paired';
 }
 
 function EmptyState({ status }: { status: 'connecting' | 'open' | 'closed' }) {
