@@ -1,0 +1,137 @@
+{
+  "_comment": "Claude Code .claude/settings.json 模板。复制到目标项目的 .claude/settings.json，把 /ABSOLUTE/PATH/TO 替换成本仓库 hooks/ 的绝对路径，把 YOUR-APP 替换成你的项目名。所有 12 种 hook 都挂上 send-event.js。不要的事件可以删掉对应键。",
+  "hooks": {
+    "SessionStart": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node /ABSOLUTE/PATH/TO/agent-obs/hooks/send-event.js --source-app=YOUR-APP --event-type=SessionStart"
+          }
+        ]
+      }
+    ],
+    "SessionEnd": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node /ABSOLUTE/PATH/TO/agent-obs/hooks/send-event.js --source-app=YOUR-APP --event-type=SessionEnd"
+          }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node /ABSOLUTE/PATH/TO/agent-obs/hooks/send-event.js --source-app=YOUR-APP --event-type=UserPromptSubmit"
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node /ABSOLUTE/PATH/TO/agent-obs/hooks/send-event.js --source-app=YOUR-APP --event-type=PreToolUse"
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node /ABSOLUTE/PATH/TO/agent-obs/hooks/send-event.js --source-app=YOUR-APP --event-type=PostToolUse"
+          }
+        ]
+      }
+    ],
+    "PostToolUseFailure": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node /ABSOLUTE/PATH/TO/agent-obs/hooks/send-event.js --source-app=YOUR-APP --event-type=PostToolUseFailure"
+          }
+        ]
+      }
+    ],
+    "PermissionRequest": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node /ABSOLUTE/PATH/TO/agent-obs/hooks/send-event.js --source-app=YOUR-APP --event-type=PermissionRequest"
+          }
+        ]
+      }
+    ],
+    "Notification": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node /ABSOLUTE/PATH/TO/agent-obs/hooks/send-event.js --source-app=YOUR-APP --event-type=Notification"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node /ABSOLUTE/PATH/TO/agent-obs/hooks/send-event.js --source-app=YOUR-APP --event-type=Stop"
+          }
+        ]
+      }
+    ],
+    "SubagentStart": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node /ABSOLUTE/PATH/TO/agent-obs/hooks/send-event.js --source-app=YOUR-APP --event-type=SubagentStart"
+          }
+        ]
+      }
+    ],
+    "SubagentStop": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node /ABSOLUTE/PATH/TO/agent-obs/hooks/send-event.js --source-app=YOUR-APP --event-type=SubagentStop"
+          }
+        ]
+      }
+    ],
+    "PreCompact": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node /ABSOLUTE/PATH/TO/agent-obs/hooks/send-event.js --source-app=YOUR-APP --event-type=PreCompact"
+          }
+        ]
+      }
+    ]
+  }
+}

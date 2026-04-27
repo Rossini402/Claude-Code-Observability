@@ -1,0 +1,6 @@
+{
+  "_comment": "本目录脚本走 CommonJS。覆盖外层根 package.json 的 type:module 设定，让 send-event.js 在本仓库及任何 host 项目下都能用 require() 正常运行。复制 hooks/ 给目标项目时建议把这个 package.json 一起带上。",
+  "name": "agent-obs-hooks",
+  "private": true,
+  "type": "commonjs"
+}
