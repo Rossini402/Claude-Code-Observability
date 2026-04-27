@@ -1,0 +1,11 @@
+{
+  "source_app": "smoke-test",
+  "session_id": "smoke-001",
+  "hook_event_type": "PreToolUse",
+  "payload": {
+    "session_id": "smoke-001",
+    "tool_name": "Bash",
+    "tool_input": { "command": "echo hello" }
+  },
+  "timestamp": 1730000000000
+}
