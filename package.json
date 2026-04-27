@@ -1,0 +1,30 @@
+{
+  "name": "agent-obs",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=20.10.0",
+    "pnpm": ">=9"
+  },
+  "scripts": {
+    "dev": "pnpm -r --parallel dev",
+    "dev:server": "pnpm --filter @agent-obs/server dev",
+    "dev:client": "pnpm --filter @agent-obs/client dev",
+    "build": "pnpm -r build",
+    "lint": "biome check .",
+    "format": "biome format --write .",
+    "type-check": "pnpm -r type-check",
+    "test:event": "curl -X POST http://localhost:4000/events -H 'Content-Type: application/json' -d @docs/test-event.json",
+    "db:reset": "rm -f apps/server/data/events.db && echo 'DB reset'"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^1.9.4",
+    "typescript": "^5.5.4"
+  },
+  "packageManager": "pnpm@10.33.0",
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "better-sqlite3"
+    ]
+  }
+}
