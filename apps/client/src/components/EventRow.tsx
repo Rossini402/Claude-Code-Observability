@@ -6,12 +6,22 @@ import { eventTypeEmoji, formatTime, summarizeEvent } from '@/lib/format';
 
 /**
  * 事件流单行：时间 | source pill | agent pill | emoji + type | tool | summary
+ * onClick 由父组件传入，触发详情弹窗
  */
-export function EventRow({ event }: { event: AgentEvent }) {
+export function EventRow({
+  event,
+  onClick,
+}: {
+  event: AgentEvent;
+  onClick?: (event: AgentEvent) => void;
+}) {
   const summary = summarizeEvent(event);
 
   return (
-    <li className="flex items-center gap-3 px-6 py-2 text-sm hover:bg-slate-900/60 transition-colors">
+    <li
+      onClick={() => onClick?.(event)}
+      className="flex cursor-pointer items-center gap-3 px-6 py-2 text-sm transition-colors hover:bg-slate-900/60"
+    >
       <time className="font-mono text-[11px] text-slate-500 tabular-nums w-[88px] shrink-0">
         {formatTime(event.timestamp)}
       </time>
