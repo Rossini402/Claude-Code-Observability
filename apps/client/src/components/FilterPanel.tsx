@@ -1,11 +1,16 @@
 'use client';
 
 import type { FilterState } from '@/hooks/useFilters';
-import { ViewModeToggle, type ViewMode } from './ViewModeToggle';
+import { type ViewMode, ViewModeToggle } from './ViewModeToggle';
+import { type ViewType, ViewTypeToggle } from './ViewTypeToggle';
 
 /**
- * 过滤面板（step 5b-2 + 5b-3 view mode toggle）
+ * 过滤面板（step 5b-2 + 5b-3 view mode toggle + 5b-4 view type toggle）
  * 不引外部 select / dropdown 库；多选用原生 <details>/<summary> 折叠
+ *
+ * 视图切换：
+ *   - ViewTypeToggle（列表 / 泳道）始终显示
+ *   - ViewModeToggle（合并 / 展开）仅在列表视图下显示
  */
 export function FilterPanel({
   sourceApps,
@@ -19,6 +24,8 @@ export function FilterPanel({
   bufferedCount,
   viewMode,
   onViewModeChange,
+  viewType,
+  onViewTypeChange,
 }: {
   sourceApps: string[];
   agentNames: string[];
@@ -31,6 +38,8 @@ export function FilterPanel({
   bufferedCount: number;
   viewMode: ViewMode;
   onViewModeChange: (mode: ViewMode) => void;
+  viewType: ViewType;
+  onViewTypeChange: (type: ViewType) => void;
 }) {
   return (
     <div className="sticky top-0 z-20 flex flex-wrap items-center gap-3 border-b border-slate-800 bg-slate-900/50 px-6 py-2 backdrop-blur">
@@ -60,7 +69,8 @@ export function FilterPanel({
         className="min-w-[260px] flex-1 rounded border border-slate-800 bg-slate-950 px-3 py-1 text-xs text-slate-200 placeholder:text-slate-600 focus:border-emerald-700 focus:outline-none"
       />
 
-      <ViewModeToggle value={viewMode} onChange={onViewModeChange} />
+      <ViewTypeToggle value={viewType} onChange={onViewTypeChange} />
+      {viewType === 'list' ? <ViewModeToggle value={viewMode} onChange={onViewModeChange} /> : null}
 
       <button
         type="button"
@@ -131,11 +141,7 @@ function EventTypeMultiselect({
   const presentChecked = all.filter((t) => selectedSet.has(t)).length;
   const allChecked = all.length > 0 && presentChecked === all.length;
   const noneChecked = presentChecked === 0;
-  const summary = allChecked
-    ? 'All'
-    : noneChecked
-      ? 'None'
-      : `${presentChecked}/${all.length}`;
+  const summary = allChecked ? 'All' : noneChecked ? 'None' : `${presentChecked}/${all.length}`;
 
   const toggle = (type: string) => {
     if (selectedSet.has(type)) {

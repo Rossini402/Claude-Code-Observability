@@ -1,8 +1,8 @@
 'use client';
 
-import { useCallback, useMemo, useState } from 'react';
 import type { AgentEvent } from '@agent-obs/shared';
-import { useEventStream, type ConnectionStatus } from './useEventStream';
+import { useCallback, useMemo, useState } from 'react';
+import { type ConnectionStatus, useEventStream } from './useEventStream';
 
 /**
  * 包装 useEventStream，加暂停能力
@@ -22,20 +22,25 @@ export function usePauseable(): {
   paused: boolean;
   togglePause: () => void;
   bufferedCount: number;
+  /** 暂停瞬间记录的时间戳，未暂停时为 null。SwimlaneView 用它冻结时间轴。 */
+  frozenAt: number | null;
 } {
   const { events: liveEvents, status } = useEventStream();
   const [paused, setPaused] = useState(false);
   const [frozenEvents, setFrozenEvents] = useState<AgentEvent[] | null>(null);
+  const [frozenAt, setFrozenAt] = useState<number | null>(null);
 
   const togglePause = useCallback(() => {
     setPaused((prev) => {
       const willPause = !prev;
       if (willPause) {
-        // 暂停瞬间：用闭包里的 liveEvents 快照视图
+        // 暂停瞬间：用闭包里的 liveEvents 快照视图，并记录冻结时刻
         setFrozenEvents(liveEvents);
+        setFrozenAt(Date.now());
       } else {
-        // 恢复瞬间：丢弃快照，UI 自然回到实时视图
+        // 恢复瞬间：丢弃快照与冻结时间，UI 自然回到实时视图
         setFrozenEvents(null);
+        setFrozenAt(null);
       }
       return willPause;
     });
@@ -57,5 +62,5 @@ export function usePauseable(): {
     return count;
   }, [paused, frozenEvents, liveEvents]);
 
-  return { events, status, paused, togglePause, bufferedCount };
+  return { events, status, paused, togglePause, bufferedCount, frozenAt };
 }
