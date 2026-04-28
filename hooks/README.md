@@ -46,6 +46,37 @@ Claude Code 的 hook 脚本，**给被观测项目复制使用**。
 
 4. **不想监听全部事件**？删掉 `settings.json` 里对应键即可。最低保留 `PreToolUse` + `PostToolUse` + `SubagentStart` + `SubagentStop` 就能看到主要轨迹。
 
+## Arguments
+
+`send-event.js` accepts two arguments:
+
+### `--source-app=NAME` (required)
+
+A label identifying which observed project the event came from.
+Recommended: use a short slug like `cc-test` or `agent-obs` rather than
+a full path.
+
+### `--event-type=TYPE` (required)
+
+The hook event type. Must be one of the 12 supported types:
+
+| Type | Fired when |
+|------|------------|
+| `SessionStart` | Claude Code session begins |
+| `SessionEnd` | Claude Code session ends |
+| `UserPromptSubmit` | User submits a prompt |
+| `PreToolUse` | Before a tool is invoked |
+| `PostToolUse` | After a tool returns successfully |
+| `PostToolUseFailure` | After a tool fails |
+| `PermissionRequest` | Claude requests permission to run a tool |
+| `Notification` | Claude shows a notification |
+| `Stop` | User stops Claude mid-action |
+| `SubagentStart` | A sub-agent (e.g. Explore) begins |
+| `SubagentStop` | A sub-agent ends |
+| `PreCompact` | Before context compaction |
+
+Each type maps directly to the corresponding key in `.claude/settings.json`.
+
 ## 协议铁律（实现要点）
 
 `send-event.js` 必须满足：
