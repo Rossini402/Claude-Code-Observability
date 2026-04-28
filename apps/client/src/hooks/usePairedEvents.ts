@@ -1,7 +1,7 @@
 'use client';
 
-import { useMemo } from 'react';
 import type { AgentEvent, PairedEvent } from '@agent-obs/shared';
+import { useMemo } from 'react';
 
 /**
  * 把事件流里的 (PreToolUse, PostToolUse) 和 (SubagentStart, SubagentStop) 合并成 PairedEvent
@@ -43,19 +43,14 @@ function pair(events: AgentEvent[]): (PairedEvent | AgentEvent)[] {
       continue;
     }
 
-    if (
-      ev.hook_event_type === 'PostToolUse' ||
-      ev.hook_event_type === 'PostToolUseFailure'
-    ) {
+    if (ev.hook_event_type === 'PostToolUse' || ev.hook_event_type === 'PostToolUseFailure') {
       const tu = readString(p, 'tool_use_id');
       if (tu) {
         const key = `${ev.session_id}|tu:${tu}`;
         const pre = cache.get(key);
         if (pre) {
           cache.delete(key);
-          const status: PairedEvent['status'] = isFailureEvent(ev)
-            ? 'failure'
-            : 'success';
+          const status: PairedEvent['status'] = isFailureEvent(ev) ? 'failure' : 'success';
           out.push({
             kind: 'paired',
             pair_type: 'tool_use',
@@ -118,8 +113,7 @@ function pair(events: AgentEvent[]): (PairedEvent | AgentEvent)[] {
   for (const pre of cache.values()) {
     out.push({
       kind: 'paired',
-      pair_type:
-        pre.hook_event_type === 'PreToolUse' ? 'tool_use' : 'subagent',
+      pair_type: pre.hook_event_type === 'PreToolUse' ? 'tool_use' : 'subagent',
       pre_event: pre,
       post_event: null,
       duration_ms: null,

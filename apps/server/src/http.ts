@@ -2,12 +2,8 @@
 // Express 路由层：POST /events 落库 + 广播，GET /events/recent、/events/filter-options、/healthz。
 // 协议见 docs/02-event-schema.md §3。
 
+import { HOOK_EVENT_TYPES, type HookEventType, type IncomingEvent } from '@agent-obs/shared';
 import express, { type Request, type Response } from 'express';
-import {
-  HOOK_EVENT_TYPES,
-  type HookEventType,
-  type IncomingEvent,
-} from '@agent-obs/shared';
 import { insertEvent, queryFilterOptions, queryRecent } from './db.js';
 import { inferAgent, recordSessionAgent } from './infer-agent.js';
 import { broadcast } from './ws.js';
@@ -70,20 +66,13 @@ export function createApp(): express.Express {
       }
 
       const hookEventType = body['hook_event_type'];
-      if (
-        typeof hookEventType !== 'string' ||
-        !HOOK_EVENT_TYPE_SET.has(hookEventType)
-      ) {
+      if (typeof hookEventType !== 'string' || !HOOK_EVENT_TYPE_SET.has(hookEventType)) {
         res.status(400).json({ error: 'invalid hook_event_type' });
         return;
       }
 
       const payload = body['payload'];
-      if (
-        payload === null ||
-        typeof payload !== 'object' ||
-        Array.isArray(payload)
-      ) {
+      if (payload === null || typeof payload !== 'object' || Array.isArray(payload)) {
         res.status(400).json({ error: 'invalid payload' });
         return;
       }
@@ -104,10 +93,7 @@ export function createApp(): express.Express {
 
       // 关键顺序：SubagentStart / SessionStart 先写缓存，
       // 这样后续同一 session 的事件能命中 lookup。
-      if (
-        hookEventType === 'SubagentStart' ||
-        hookEventType === 'SessionStart'
-      ) {
+      if (hookEventType === 'SubagentStart' || hookEventType === 'SessionStart') {
         recordSessionAgent(sessionId, agentName);
       }
 

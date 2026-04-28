@@ -3,8 +3,8 @@
 // 协议见 docs/02-event-schema.md §5。
 
 import type { Server } from 'node:http';
-import { WebSocket, WebSocketServer } from 'ws';
 import type { AgentEvent, WsMessage } from '@agent-obs/shared';
+import { WebSocket, WebSocketServer } from 'ws';
 
 /** 心跳间隔（毫秒）。client 30s 没收到任何消息就视为断线。 */
 const PING_INTERVAL_MS = 30_000;

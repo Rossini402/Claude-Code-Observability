@@ -4,7 +4,6 @@
  */
 import fs from 'node:fs';
 import path from 'node:path';
-import Database from 'better-sqlite3';
 import type {
   AgentEvent,
   FilterOptionsResponse,
@@ -12,6 +11,7 @@ import type {
   IncomingEvent,
   RecentEventsResponse,
 } from '@agent-obs/shared';
+import Database from 'better-sqlite3';
 import { env } from './env.js';
 
 // 确保 DB 文件父目录存在
@@ -116,9 +116,7 @@ let insertCount = 0;
  * 插入事件并返回完整 AgentEvent
  * 适用：单条 hook 写入，频率受 hook 触发上限约束
  */
-export function insertEvent(
-  event: IncomingEvent & { agent_name: string },
-): AgentEvent {
+export function insertEvent(event: IncomingEvent & { agent_name: string }): AgentEvent {
   const now = Date.now();
   const timestamp = typeof event.timestamp === 'number' ? event.timestamp : now;
   const created_at = now;
@@ -230,15 +228,11 @@ export function queryFilterOptions(): FilterOptionsResponse {
   const since = Date.now() - 24 * 60 * 60 * 1000;
 
   const sourceAppRows = db
-    .prepare(
-      `SELECT DISTINCT source_app FROM events WHERE created_at >= ? ORDER BY source_app ASC`,
-    )
+    .prepare(`SELECT DISTINCT source_app FROM events WHERE created_at >= ? ORDER BY source_app ASC`)
     .all(since) as Array<{ source_app: string }>;
 
   const agentNameRows = db
-    .prepare(
-      `SELECT DISTINCT agent_name FROM events WHERE created_at >= ? ORDER BY agent_name ASC`,
-    )
+    .prepare(`SELECT DISTINCT agent_name FROM events WHERE created_at >= ? ORDER BY agent_name ASC`)
     .all(since) as Array<{ agent_name: string }>;
 
   const eventTypeRows = db

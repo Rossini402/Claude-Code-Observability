@@ -6,10 +6,7 @@ import type { RecentEventsResponse } from '@agent-obs/shared';
  * @param httpBase NEXT_PUBLIC_SERVER_HTTP
  * @param limit  默认 200（step 5a 不做无限滚动）
  */
-export async function fetchRecent(
-  httpBase: string,
-  limit = 200,
-): Promise<RecentEventsResponse> {
+export async function fetchRecent(httpBase: string, limit = 200): Promise<RecentEventsResponse> {
   const res = await fetch(`${httpBase}/events/recent?limit=${limit}`, {
     cache: 'no-store',
   });

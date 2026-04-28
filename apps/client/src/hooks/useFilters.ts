@@ -1,8 +1,8 @@
 'use client';
 
-import { useCallback, useState } from 'react';
 import type { AgentEvent } from '@agent-obs/shared';
 import { HOOK_EVENT_TYPES } from '@agent-obs/shared';
+import { useCallback, useState } from 'react';
 
 /**
  * Dashboard 过滤条件状态

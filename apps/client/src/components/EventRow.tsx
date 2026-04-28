@@ -1,8 +1,8 @@
 'use client';
 
-import type { AgentEvent } from '@agent-obs/shared';
 import { agentColor, sourceColor } from '@/lib/colors';
 import { eventTypeEmoji, formatTime, summarizeEvent } from '@/lib/format';
+import type { AgentEvent } from '@agent-obs/shared';
 
 /**
  * 事件流单行：时间 | source pill | agent pill | emoji + type | tool | summary
@@ -26,13 +26,9 @@ export function EventRow({
         {formatTime(event.timestamp)}
       </time>
 
-      <ColoredPill color={sourceColor(event.source_app)}>
-        {event.source_app}
-      </ColoredPill>
+      <ColoredPill color={sourceColor(event.source_app)}>{event.source_app}</ColoredPill>
 
-      <ColoredPill color={agentColor(event.agent_name)}>
-        {event.agent_name}
-      </ColoredPill>
+      <ColoredPill color={agentColor(event.agent_name)}>{event.agent_name}</ColoredPill>
 
       <span className="font-mono text-[11px] text-slate-300 w-[180px] shrink-0">
         <span className="mr-1">{eventTypeEmoji(event.hook_event_type)}</span>
@@ -40,15 +36,11 @@ export function EventRow({
       </span>
 
       {event.tool_name ? (
-        <span className="font-mono text-[11px] text-emerald-300 shrink-0">
-          {event.tool_name}
-        </span>
+        <span className="font-mono text-[11px] text-emerald-300 shrink-0">{event.tool_name}</span>
       ) : null}
 
       {summary ? (
-        <span className="text-slate-400 truncate flex-1 font-mono text-[11px]">
-          {summary}
-        </span>
+        <span className="text-slate-400 truncate flex-1 font-mono text-[11px]">{summary}</span>
       ) : (
         <span className="flex-1" />
       )}

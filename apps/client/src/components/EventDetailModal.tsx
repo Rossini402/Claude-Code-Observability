@@ -1,9 +1,9 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import type { AgentEvent, PairedEvent } from '@agent-obs/shared';
 import { agentColor, sourceColor } from '@/lib/colors';
 import { eventTypeEmoji, formatTime } from '@/lib/format';
+import type { AgentEvent, PairedEvent } from '@agent-obs/shared';
+import { useEffect, useState } from 'react';
 
 /**
  * 事件详情弹窗（step 5b-3）
@@ -81,11 +81,7 @@ export function EventDetailModal({
       onClick={onClose}
       role="dialog"
       aria-modal="true"
-      aria-label={
-        paired
-          ? `Paired ${event.pair_type} detail`
-          : `Event ${event.id} detail`
-      }
+      aria-label={paired ? `Paired ${event.pair_type} detail` : `Event ${event.id} detail`}
       className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/70 backdrop-blur-sm px-4 py-10"
     >
       <div
@@ -100,9 +96,7 @@ export function EventDetailModal({
             <h2 className="text-base font-semibold text-slate-100">
               {displayEvent.hook_event_type}
             </h2>
-            <span className="ml-2 font-mono text-xs text-slate-500">
-              #{displayEvent.id}
-            </span>
+            <span className="ml-2 font-mono text-xs text-slate-500">#{displayEvent.id}</span>
             {paired ? (
               <span className="ml-2 rounded border border-slate-700 px-1.5 py-0.5 text-[10px] font-mono text-slate-400">
                 {event.pair_type === 'subagent' ? 'Subagent' : 'Tool'} pair
@@ -122,13 +116,8 @@ export function EventDetailModal({
         {/* Pre / Post Tabs（仅 paired 时） */}
         {paired ? (
           <nav className="flex shrink-0 border-b border-slate-800 px-5">
-            <TabButton
-              active={activeTab === 'pre'}
-              onClick={() => setActiveTab('pre')}
-            >
-              <span className="mr-1">
-                {eventTypeEmoji(event.pre_event.hook_event_type)}
-              </span>
+            <TabButton active={activeTab === 'pre'} onClick={() => setActiveTab('pre')}>
+              <span className="mr-1">{eventTypeEmoji(event.pre_event.hook_event_type)}</span>
               Pre · {event.pre_event.hook_event_type}
             </TabButton>
             <TabButton
@@ -140,9 +129,7 @@ export function EventDetailModal({
             >
               {event.post_event !== null ? (
                 <>
-                  <span className="mr-1">
-                    {eventTypeEmoji(event.post_event.hook_event_type)}
-                  </span>
+                  <span className="mr-1">{eventTypeEmoji(event.post_event.hook_event_type)}</span>
                   Post · {event.post_event.hook_event_type}
                 </>
               ) : (
@@ -154,15 +141,9 @@ export function EventDetailModal({
 
         {/* 元信息 */}
         <div className="flex shrink-0 flex-wrap items-center gap-x-4 gap-y-2 border-b border-slate-800 px-5 py-3 text-[11px] font-mono">
-          <Pill color={sourceColor(displayEvent.source_app)}>
-            {displayEvent.source_app}
-          </Pill>
-          <Pill color={agentColor(displayEvent.agent_name)}>
-            {displayEvent.agent_name}
-          </Pill>
-          <span className="tabular-nums text-slate-300">
-            {formatTime(displayEvent.timestamp)}
-          </span>
+          <Pill color={sourceColor(displayEvent.source_app)}>{displayEvent.source_app}</Pill>
+          <Pill color={agentColor(displayEvent.agent_name)}>{displayEvent.agent_name}</Pill>
+          <span className="tabular-nums text-slate-300">{formatTime(displayEvent.timestamp)}</span>
           <span className="text-slate-500">
             session:{' '}
             <span className="text-slate-300" title={displayEvent.session_id}>
@@ -171,8 +152,7 @@ export function EventDetailModal({
           </span>
           {displayEvent.tool_name ? (
             <span className="text-slate-500">
-              tool:{' '}
-              <span className="text-emerald-300">{displayEvent.tool_name}</span>
+              tool: <span className="text-emerald-300">{displayEvent.tool_name}</span>
             </span>
           ) : null}
           {paired && event.duration_ms !== null ? (
@@ -224,19 +204,11 @@ function TabButton({
 }) {
   const base = 'relative px-3 py-2 text-xs font-mono transition-colors';
   if (disabled) {
-    return (
-      <span className={`${base} cursor-not-allowed text-slate-600`}>
-        {children}
-      </span>
-    );
+    return <span className={`${base} cursor-not-allowed text-slate-600`}>{children}</span>;
   }
   if (active) {
     return (
-      <button
-        type="button"
-        onClick={onClick}
-        className={`${base} text-emerald-300`}
-      >
+      <button type="button" onClick={onClick} className={`${base} text-emerald-300`}>
         {children}
         <span className="absolute inset-x-0 bottom-0 h-0.5 bg-emerald-400" />
       </button>

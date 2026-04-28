@@ -72,9 +72,7 @@ export function lookupSessionAgent(sessionId: string): string | null {
  * 启动时从 DB 重建 session→agent 映射
  * 适用：进程启动一次，数据量受 MAX_EVENTS_KEPT 约束
  */
-export function rebuildSessionMap(
-  rows: Array<{ session_id: string; agent_name: string }>,
-): void {
+export function rebuildSessionMap(rows: Array<{ session_id: string; agent_name: string }>): void {
   sessionAgentMap.clear();
   for (const row of rows) {
     if (row.session_id) {

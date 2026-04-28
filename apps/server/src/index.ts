@@ -3,11 +3,11 @@
 // 启动顺序见 docs/01-architecture.md §3。
 
 import http from 'node:http';
-import { env } from './env.js';
 import { loadSessionAgents } from './db.js';
+import { env } from './env.js';
 import { createApp } from './http.js';
-import { attachWebSocket } from './ws.js';
 import { rebuildSessionMap } from './infer-agent.js';
+import { attachWebSocket } from './ws.js';
 
 // 1. 从 DB 重建 session_id → agent_name 的内存映射。
 //    db.ts 在 import 阶段会自动建表，即使 events.db 不存在也不会抛错。

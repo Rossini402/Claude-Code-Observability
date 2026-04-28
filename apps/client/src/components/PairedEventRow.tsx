@@ -1,9 +1,9 @@
 'use client';
 
-import type { PairedEvent } from '@agent-obs/shared';
+import { useNow } from '@/hooks/useNow';
 import { agentColor, sourceColor } from '@/lib/colors';
 import { formatTime, summarizeEvent } from '@/lib/format';
-import { useNow } from '@/hooks/useNow';
+import type { PairedEvent } from '@agent-obs/shared';
 
 /** 60s 阈值：Pre 之后过这么久还没 Post，视觉切到 ⚠️ timeout */
 const TIMEOUT_MS = 60_000;
@@ -61,9 +61,7 @@ function RunningPairedRow({
   const isTimeout = elapsed >= TIMEOUT_MS;
 
   const icon = isTimeout ? '⚠️' : '⏳';
-  const label = isTimeout
-    ? `>${Math.floor(elapsed / 1000)}s`
-    : formatDuration(elapsed);
+  const label = isTimeout ? `>${Math.floor(elapsed / 1000)}s` : formatDuration(elapsed);
   const labelClass = isTimeout
     ? 'font-mono text-[11px] text-amber-300 shrink-0 tabular-nums'
     : 'font-mono text-[11px] text-slate-400 shrink-0 tabular-nums';
@@ -92,8 +90,8 @@ function RowShell({
   const summary = summarizeEvent(pre);
   const subjectName =
     pairedEvent.pair_type === 'subagent'
-      ? readString(pre.payload, 'subagent_type') ?? ''
-      : pre.tool_name ?? '';
+      ? (readString(pre.payload, 'subagent_type') ?? '')
+      : (pre.tool_name ?? '');
 
   return (
     <li
@@ -104,13 +102,9 @@ function RowShell({
         {formatTime(pre.timestamp)}
       </time>
 
-      <ColoredPill color={sourceColor(pre.source_app)}>
-        {pre.source_app}
-      </ColoredPill>
+      <ColoredPill color={sourceColor(pre.source_app)}>{pre.source_app}</ColoredPill>
 
-      <ColoredPill color={agentColor(pre.agent_name)}>
-        {pre.agent_name}
-      </ColoredPill>
+      <ColoredPill color={agentColor(pre.agent_name)}>{pre.agent_name}</ColoredPill>
 
       <span className="font-mono text-[11px] text-slate-300 w-[180px] shrink-0">
         <span className="mr-1">{icon}</span>
@@ -118,15 +112,11 @@ function RowShell({
       </span>
 
       {subjectName ? (
-        <span className="font-mono text-[11px] text-emerald-300 shrink-0">
-          {subjectName}
-        </span>
+        <span className="font-mono text-[11px] text-emerald-300 shrink-0">{subjectName}</span>
       ) : null}
 
       {summary ? (
-        <span className="text-slate-400 truncate flex-1 font-mono text-[11px]">
-          {summary}
-        </span>
+        <span className="text-slate-400 truncate flex-1 font-mono text-[11px]">{summary}</span>
       ) : (
         <span className="flex-1" />
       )}
@@ -157,10 +147,7 @@ function ColoredPill({
   );
 }
 
-function readString(
-  obj: Record<string, unknown>,
-  key: string,
-): string | undefined {
+function readString(obj: Record<string, unknown>, key: string): string | undefined {
   const v = obj[key];
   return typeof v === 'string' && v.length > 0 ? v : undefined;
 }

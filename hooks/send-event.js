@@ -1,20 +1,4 @@
 #!/usr/bin/env node
-// hooks/send-event.js
-// Claude Code hook 通用事件发送器
-// 协议见 docs/02-event-schema.md §6
-//
-// 用法：
-//   node send-event.js --source-app=my-app --event-type=PreToolUse [--server=http://localhost:4000]
-// stdin：
-//   Claude Code 通过管道传入的 hook payload JSON
-// 输出：
-//   POST 到 ${server}/events
-// 协议铁律：
-//   无论成功失败都 exit 0，绝不阻塞 Claude Code
-// 错误日志：
-//   追加写入 ~/.agent-obs/send-event.log
-
-'use strict';
 
 const fs = require('node:fs');
 const path = require('node:path');

@@ -1,8 +1,8 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
-import type { AgentEvent, WsMessage } from '@agent-obs/shared';
 import { fetchRecent } from '@/lib/api';
+import type { AgentEvent, WsMessage } from '@agent-obs/shared';
+import { useEffect, useRef, useState } from 'react';
 
 export type ConnectionStatus = 'connecting' | 'open' | 'closed';
 

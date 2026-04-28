@@ -17,10 +17,7 @@ export function ViewModeToggle({
       <Segment active={value === 'merged'} onClick={() => onChange('merged')}>
         合并
       </Segment>
-      <Segment
-        active={value === 'expanded'}
-        onClick={() => onChange('expanded')}
-      >
+      <Segment active={value === 'expanded'} onClick={() => onChange('expanded')}>
         展开
       </Segment>
     </div>
